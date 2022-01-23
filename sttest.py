@@ -69,17 +69,40 @@ def next_guess(response,new_word,black_list=[]):
 if 'word' not in st.session_state:
     st.session_state['word'] = start()
     st.session_state['black_list'] = []
+    st.session_state['status'] = 'aaaaa'
 
 with st.form("my_form",clear_on_submit=True):
     new_word = st.session_state.word
-    
+    status = st.session_state.status
+        
     st.write('Guess:', new_word)
     submitted = st.form_submit_button("Submit")
-    status = st.text_input("Wordle's Response: ", key='status')
+    
+    col1,col2,col3,col4,col5 = st.columns(5)
+    
+    with col1:
+        letter1 = st.radio( new_word[0].upper(),('grey', 'yellow', 'green'),key='letter1')
+    
+    with col2:
+        letter2 = st.radio( new_word[1].upper(),('grey', 'yellow', 'green'),key='letter2')
+    
+    with col3:
+        letter3 = st.radio( new_word[2].upper(),('grey', 'yellow', 'green'),key='letter3')
+    
+    with col4:
+        letter4 = st.radio( new_word[3].upper(),('grey', 'yellow', 'green'),key='letter4')
+    
+    with col5:
+        letter5 = st.radio( new_word[4].upper(),('grey', 'yellow', 'green'),key='letter5')
 
 
     # Every form must have a submit button.
     if submitted:
+        colors = [letter1,letter2,letter3,letter4,letter5]
+        status = ''.join(['0' if c=='grey' else 'Y' if c=='yellow' else 'G' for c in colors])
+        st.session_state.status = status
+        st.write(status)
+
         for j in range(5):
             if status[j]=='0':
                 st.session_state.black_list.append(new_word[j])
